@@ -1,7 +1,6 @@
 <?php
 namespace tests\Test;
 
-
 class EazymatchClientTest extends \PHPUnit_Framework_TestCase
 {
     public function testConnect()
@@ -9,7 +8,11 @@ class EazymatchClientTest extends \PHPUnit_Framework_TestCase
         $foo = true;
         //try and connect
 
-        $tt = new \EazymatchClient('d9edf0d5d68c5e9bbf284094dd456fcd74d401d4','http://talentree.io/v1/');
+        $tt = new EazymatchClient(
+            '04c65226-0167-426a-aa24-1089faa6b591',
+            'https://api.eazymatch.local',
+            'klantnaam'
+        );
 
         if (!empty($tt)) {
             $test = $tt->get('tree');
