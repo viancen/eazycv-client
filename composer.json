@@ -1,0 +1,37 @@
+{
+  "name": "viancen/eazymatch-client",
+  "type": "library",
+  "version": "1.0",
+  "description": "API client for EazyMatch 4.0",
+  "keywords": [
+    "eazymatch",
+    "api"
+  ],
+  "homepage": "https://github.com/viancen/eazymatch-client",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "EazyMatch devs",
+      "email": "info@eazymatch.nl",
+      "homepage": "http://www.eazymatch-online.nl",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=5.6.0",
+    "guzzlehttp/guzzle": "~6.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "3.7.14"
+  },
+  "autoload": {
+    "psr-0": {
+      "EazymatchClient": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-0": {
+      "EazymatchClientTest": "tests/"
+    }
+  }
+}
