@@ -1,7 +1,7 @@
 {
   "name": "viancen/eazymatch-client",
-  "type": "library",
-  "version": "1.1",
+  "type": "package",
+  "version": "1.2.0",
   "description": "API client for EazyMatch 4.0",
   "keywords": [
     "eazymatch",
