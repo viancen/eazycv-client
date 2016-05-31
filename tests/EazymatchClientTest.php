@@ -1,28 +1,39 @@
 <?php
+// run  ./vendor/bin/phpunit tests/EazymatchClientTest
 namespace tests\Test;
 
-class EazymatchClientTest extends \PHPUnit_Framework_TestCase
+class theTest extends \PHPUnit_Framework_TestCase
 {
     public function testConnect()
     {
+
         $foo = true;
         //try and connect
 
-        $tt = new EazymatchClient(
-            '04c65226-0167-426a-aa24-1089faa6b591',
-            'https://api.eazymatch.local',
-            'klantnaam'
+        $key = '04c65226-0167-426a-aa24-1089faa6b591';
+        $secret = '1bb5012d-67e3-4c06-bb14-a8ce4fad8ed4';
+
+        $tt = new \EazymatchClient(
+            $key,
+            $secret,
+            'klantnaam',
+            'https://api.eazymatch.local'
         );
 
         if (!empty($tt)) {
-            $test = $tt->get('tree');
-            if (!empty($test)) {
-                $foo = true;
-            }
+            $test = $tt->loginUser('nieuwenhuizen@gmail.com', 'test');
         } else {
-            $foo = false;
+            $this->assertTrue(false);
         }
-        $this->assertTrue($foo);
+        //session token is now set. in production = store this in local storage for future requests
+        $data = $tt->get('users');
+
+        if (!empty($data)) {
+            print_r($data);
+            $this->assertTrue(true);
+        } else {
+            $this->assertTrue(false);
+        }
 
     }
 

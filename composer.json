@@ -1,7 +1,7 @@
 {
   "name": "viancen/eazymatch-client",
   "type": "library",
-  "version": "1.0",
+  "version": "1.1",
   "description": "API client for EazyMatch 4.0",
   "keywords": [
     "eazymatch",
@@ -11,7 +11,7 @@
   "license": "Apache-2.0",
   "authors": [
     {
-      "name": "EazyMatch devs",
+      "name": "EazyMatch development team",
       "email": "info@eazymatch.nl",
       "homepage": "http://www.eazymatch-online.nl",
       "role": "Developer"
@@ -31,7 +31,8 @@
   },
   "autoload-dev": {
     "psr-0": {
-      "EazymatchClientTest": "tests/"
+      "EazymatchClientTest": "tests/",
+      "EazymatchClient": "src/"
     }
   }
 }

@@ -13,6 +13,7 @@ class EazymatchClient
 
     //API key, get one at eazymatch-online.nl
     public $apiKey;
+    public $apiSecret;
 
     //What part of Eazymatch is used
     public $settings = [];
@@ -31,21 +32,25 @@ class EazymatchClient
     /**
      * EazymatchClient constructor.
      *
-     * @param null $apikey
+     * @param null $apiKey
+     * @param null $apiSecret
+     * @param null $customer
      * @param null $root
      * @param array $options
      */
-    public function __construct($apikey = null, $root = null, $customer=null, $options = [])
+    public function __construct($apikey = '', $apiSecret = '', $customer = null, $root = null, $options = [])
     {
         if (!$apikey) throw new Eazymatch_Error('You must provide a Eazymatch API key');
+        if (!$apiSecret) throw new Eazymatch_Error('You must provide a Eazymatch API secret');
         if (!$customer) throw new Eazymatch_Error('You must provide a Eazymatch customer slug');
         if (!$root) {
             $root = 'https://api.eazymatch.net/v1/';
         }
 
-        $this->apiKey = $apikey;
+        $this->apiKey = sha1($apikey . $apiSecret);
         $this->root = $root;
-        $this->root = $customer;
+        $this->apiSecret = $apiSecret;
+        $this->customer = $customer;
 
         if (!empty($options)) {
             if (!empty($options['settings'])) {
@@ -64,6 +69,30 @@ class EazymatchClient
         return $this->settings;
     }
 
+    /**
+     * @param null $email
+     * @param null $passWord
+     * @throws Eazymatch_Error
+     * @return array $sessionTokenToReplaceApiTokenWith
+     */
+    public function loginUser($email = null, $passWord = null)
+    {
+        if (!$email) throw new Eazymatch_Error('You must provide a emailaddress');
+        if (!$passWord) throw new Eazymatch_Error('You must provide a password');
+
+        $data = $this->post('users/login', [
+            'email' => $email,
+            'password' => $passWord
+        ]);
+
+        if (!empty($data['session'])) {
+            $this->apiKey = sha1($data['session']['token'] . $this->apiSecret);
+            return $data['session'];
+        } else {
+            throw new Eazymatch_Error('Invalid credentials');
+        }
+
+    }
 
     /**
      * Post request to Eazymatch.io
