@@ -1,5 +1,5 @@
 <?php
-// run  ./vendor/bin/phpunit tests/EazymatchClientTest
+// run  ./vendor/bin/phpunit tests/EazycvClientTest
 namespace tests\Test;
 
 class theTest extends \PHPUnit_Framework_TestCase
@@ -13,11 +13,11 @@ class theTest extends \PHPUnit_Framework_TestCase
         $key = '04c65226-0167-426a-aa24-1089faa6b591';
         $secret = '1bb5012d-67e3-4c06-bb14-a8ce4fad8ed4';
 
-        $tt = new \EazymatchClient(
+        $tt = new \EazycvClient(
             $key,
             $secret,
             'klantnaam',
-            'https://api.eazymatch.local'
+            'https://api.eazycv.local'
         );
 
         if (!empty($tt)) {
