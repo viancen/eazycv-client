@@ -11,7 +11,7 @@ class EazycvClient
     //customer slug
     public $customer;
 
-    //API key, get one at eazymatch-online.nl
+    //API key, get one at eazycv.nl
     public $apiKey;
     public $apiSecret;
 
@@ -44,7 +44,7 @@ class EazycvClient
         if (!$apiSecret) throw new Eazycv_Error('You must provide a Eazycv API secret');
         if (!$customer) throw new Eazycv_Error('You must provide a Eazycv customer slug');
         if (!$root) {
-            $root = 'https://api.eazymatch.net/v1/';
+            $root = 'https://api.eazycv.net';
         }
 
         $this->apiKey = sha1($apikey . $apiSecret);
