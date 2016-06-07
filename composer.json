@@ -2,7 +2,7 @@
   "name": "viancen/eazycv-client",
   "type": "package",
   "version": "1.2.0",
-  "description": "API client for EazyMatch 4.0",
+  "description": "API client for EazyCV",
   "keywords": [
     "eazymatch",
     "api"
@@ -11,7 +11,7 @@
   "license": "Apache-2.0",
   "authors": [
     {
-      "name": "EazyMatch development team",
+      "name": "Eazycv development team",
       "email": "info@eazymatch.nl",
       "homepage": "http://www.eazymatch-online.nl",
       "role": "Developer"

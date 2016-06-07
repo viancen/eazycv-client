@@ -1,9 +1,9 @@
 <?php
 use GuzzleHttp\Client;
 
-require_once 'EazymatchClient/Exceptions.php';
+require_once 'EazycvClient/Exceptions.php';
 
-class EazymatchClient
+class EazycvClient
 {
     //private client (Guzzle)
     private $client;
@@ -15,7 +15,7 @@ class EazymatchClient
     public $apiKey;
     public $apiSecret;
 
-    //What part of Eazymatch is used
+    //What part of Eazycv is used
     public $settings = [];
 
     //Root url of API
@@ -26,11 +26,11 @@ class EazymatchClient
 
     //Todo: map all errors into comprehensible messages
     public static $error_map = [
-        "Invalid_Key" => "Eazymatch_Invalid_Key",
+        "Invalid_Key" => "Eazycv_Invalid_Key",
     ];
 
     /**
-     * EazymatchClient constructor.
+     * EazycvClient constructor.
      *
      * @param null $apiKey
      * @param null $apiSecret
@@ -40,9 +40,9 @@ class EazymatchClient
      */
     public function __construct($apikey = '', $apiSecret = '', $customer = null, $root = null, $options = [])
     {
-        if (!$apikey) throw new Eazymatch_Error('You must provide a Eazymatch API key');
-        if (!$apiSecret) throw new Eazymatch_Error('You must provide a Eazymatch API secret');
-        if (!$customer) throw new Eazymatch_Error('You must provide a Eazymatch customer slug');
+        if (!$apikey) throw new Eazycv_Error('You must provide a Eazycv API key');
+        if (!$apiSecret) throw new Eazycv_Error('You must provide a Eazycv API secret');
+        if (!$customer) throw new Eazycv_Error('You must provide a Eazycv customer slug');
         if (!$root) {
             $root = 'https://api.eazymatch.net/v1/';
         }
@@ -72,13 +72,13 @@ class EazymatchClient
     /**
      * @param null $email
      * @param null $passWord
-     * @throws Eazymatch_Error
+     * @throws Eazycv_Error
      * @return array $sessionTokenToReplaceApiTokenWith
      */
     public function loginUser($email = null, $passWord = null)
     {
-        if (!$email) throw new Eazymatch_Error('You must provide a emailaddress');
-        if (!$passWord) throw new Eazymatch_Error('You must provide a password');
+        if (!$email) throw new Eazycv_Error('You must provide a emailaddress');
+        if (!$passWord) throw new Eazycv_Error('You must provide a password');
 
         $data = $this->post('users/login', [
             'email' => $email,
@@ -89,13 +89,13 @@ class EazymatchClient
             $this->apiKey = sha1($data['session']['token'] . $this->apiSecret);
             return $data['session'];
         } else {
-            throw new Eazymatch_Error('Invalid credentials');
+            throw new Eazycv_Error('Invalid credentials');
         }
 
     }
 
     /**
-     * Post request to Eazymatch.io
+     * Post request to Eazycv.io
      *
      * @param $endpoint
      * @param array $params
@@ -117,7 +117,7 @@ class EazymatchClient
                 'body' => json_encode($params)
             ]);
 
-        } catch (Eazymatch_HttpError $error) {
+        } catch (Eazycv_HttpError $error) {
             return [
                 'code' => $error->getCode(),
                 'message' => $error->getMessage()
@@ -129,7 +129,7 @@ class EazymatchClient
     }
 
     /**
-     * Post request to Eazymatch.io
+     * Post request to Eazycv.io
      *
      * @param $endpoint
      * @return mixed
@@ -149,7 +149,7 @@ class EazymatchClient
                 'verify' => false
             ]);
 
-        } catch (Eazymatch_HttpError $error) {
+        } catch (Eazycv_HttpError $error) {
             return [
                 'code' => $error->getCode(),
                 'message' => $error->getMessage()
@@ -161,7 +161,7 @@ class EazymatchClient
     }
 
     /**
-     * Put request to Eazymatch.io
+     * Put request to Eazycv.io
      *
      * @param $endpoint
      * @return mixed
@@ -181,7 +181,7 @@ class EazymatchClient
                 'verify' => false
             ]);
 
-        } catch (Eazymatch_HttpError $error) {
+        } catch (Eazycv_HttpError $error) {
             return [
                 'code' => $error->getCode(),
                 'message' => $error->getMessage()
@@ -193,7 +193,7 @@ class EazymatchClient
     }
 
     /**
-     * Put request to Eazymatch.io
+     * Put request to Eazycv.io
      *
      * @param $endpoint
      * @return mixed
@@ -213,7 +213,7 @@ class EazymatchClient
                 'verify' => false
             ]);
 
-        } catch (Eazymatch_HttpError $error) {
+        } catch (Eazycv_HttpError $error) {
             return [
                 'code' => $error->getCode(),
                 'message' => $error->getMessage()
