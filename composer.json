@@ -1,5 +1,5 @@
 {
-  "name": "viancen/eazymatch-client",
+  "name": "viancen/eazycv-client",
   "type": "package",
   "version": "1.2.0",
   "description": "API client for EazyMatch 4.0",
@@ -7,7 +7,7 @@
     "eazymatch",
     "api"
   ],
-  "homepage": "https://github.com/viancen/eazymatch-client",
+  "homepage": "https://github.com/viancen/eazycv-client",
   "license": "Apache-2.0",
   "authors": [
     {
