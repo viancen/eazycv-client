@@ -1,7 +1,7 @@
 {
   "name": "viancen/eazycv-client",
   "type": "package",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "API client for EazyCV",
   "keywords": [
     "eazycv",

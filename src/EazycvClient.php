@@ -134,7 +134,7 @@ class EazycvClient
      * @param $endpoint
      * @return mixed
      */
-    public function get($endpoint)
+    public function get($endpoint, $parameters = [])
     {
 
         try {
@@ -146,7 +146,8 @@ class EazycvClient
                     'Content-Type' => 'application/json',
                 ],
                 'decode_content' => true,
-                'verify' => false
+                'verify' => false,
+                'query' => $parameters
             ]);
 
         } catch (Eazycv_HttpError $error) {
