@@ -72,17 +72,19 @@ class EazycvClient
     /**
      * @param null $email
      * @param null $passWord
+     * @param null $persistant
      * @throws Eazycv_Error
      * @return array $sessionTokenToReplaceApiTokenWith
      */
-    public function loginUser($email = null, $passWord = null)
+    public function loginUser($email = null, $passWord = null, $persistant = false)
     {
         if (!$email) throw new Eazycv_Error('You must provide a emailaddress');
         if (!$passWord) throw new Eazycv_Error('You must provide a password');
 
         $data = $this->post('users/login', [
             'email' => $email,
-            'password' => $passWord
+            'password' => $passWord,
+            'persistant' => $persistant
         ]);
 
         if (!empty($data['session'])) {
