@@ -96,6 +96,34 @@ class EazycvClient
 
     }
 
+
+    /**
+     * @param null $email
+     * @param null $passWord
+     * @param null $persistant
+     * @throws Eazycv_Error
+     * @return array $sessionTokenToReplaceApiTokenWith
+     */
+    public function loginCandidate($email = null, $passWord = null, $persistant = false)
+    {
+        if (!$email) throw new Eazycv_Error('You must provide a emailaddress');
+        if (!$passWord) throw new Eazycv_Error('You must provide a password');
+
+        $data = $this->post('candidates/login', [
+            'email' => $email,
+            'password' => $passWord,
+            'persistant' => $persistant
+        ]);
+
+        if (!empty($data['session'])) {
+            $this->apiKey = sha1($data['session']['token'] . $this->apiSecret);
+            return $data['session'];
+        } else {
+            throw new Eazycv_Error('Invalid credentials');
+        }
+
+    }
+
     /**
      * Post request to Eazycv.io
      *
