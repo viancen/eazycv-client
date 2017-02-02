@@ -13,6 +13,7 @@ class EazycvClient
 
     //API key, get one at eazycv.nl
     public $apiKey;
+    public $userKey = null;
     public $apiSecret;
 
     //What part of Eazycv is used
@@ -64,6 +65,11 @@ class EazycvClient
 
     }
 
+    public function setUserKey($userKey)
+    {
+        $this->userKey =  sha1($userKey . $this->apiSecret);
+    }
+
     public function getSettings()
     {
         return $this->settings;
@@ -88,7 +94,7 @@ class EazycvClient
         ]);
 
         if (!empty($data['session'])) {
-            $this->apiKey = sha1($data['session']['token'] . $this->apiSecret);
+            $this->setUserKey($data['session']['token']);
             return $data['session'];
         } else {
             throw new Eazycv_Error('Invalid credentials');
@@ -137,13 +143,14 @@ class EazycvClient
         try {
             $response = $this->client->request('POST', $this->root . $endpoint, [
                 'headers' => [
+                    'X-User' => $this->userKey,
                     'X-Authorization' => $this->apiKey,
                     'X-Customer' => $this->customer,
                     'X-response-type' => 'json',
                     'Content-Type' => 'application/json',
                 ],
                 'decode_content' => true,
-                'verify' => false,
+
                 'body' => json_encode($params)
             ]);
 
@@ -170,6 +177,7 @@ class EazycvClient
         try {
             $response = $this->client->request('GET', $this->root . $endpoint, [
                 'headers' => [
+                    'X-User' => $this->userKey,
                     'X-Authorization' => $this->apiKey,
                     'X-Customer' => $this->customer,
                     'X-response-type' => 'json',
@@ -203,6 +211,7 @@ class EazycvClient
         try {
             $response = $this->client->request('PUT', $this->root . $endpoint, [
                 'headers' => [
+                    'X-User' => $this->userKey,
                     'X-Authorization' => $this->apiKey,
                     'X-Customer' => $this->customer,
                     'X-response-type' => 'json',
@@ -236,6 +245,7 @@ class EazycvClient
         try {
             $response = $this->client->request('DELETE', $this->root . $endpoint, [
                 'headers' => [
+                    'X-User' => $this->userKey,
                     'X-Authorization' => $this->apiKey,
                     'X-Customer' => $this->customer,
                     'X-response-type' => 'json',
