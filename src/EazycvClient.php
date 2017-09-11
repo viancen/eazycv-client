@@ -1,4 +1,5 @@
 <?php
+
 use GuzzleHttp\Client;
 
 require_once 'EazycvClient/Exceptions.php';
@@ -48,7 +49,7 @@ class EazycvClient
             $root = 'https://api.eazycv.net';
         }
 
-        $this->apiKey = sha1($apikey . $apiSecret);
+        $this->apiKey = md5($apikey . $apiSecret);
         $this->root = $root;
         $this->apiSecret = $apiSecret;
         $this->customer = $customer;
@@ -67,7 +68,7 @@ class EazycvClient
 
     public function setUserKey($userKey)
     {
-        $this->userKey =  sha1($userKey . $this->apiSecret);
+        $this->userKey = md5($userKey . $this->apiSecret);
     }
 
     public function getSettings()
@@ -122,7 +123,7 @@ class EazycvClient
         ]);
 
         if (!empty($data['session'])) {
-            $this->apiKey = sha1($data['session']['token'] . $this->apiSecret);
+            $this->apiKey = md5($data['session']['token'] . $this->apiSecret);
             return $data['session'];
         } else {
             throw new Eazycv_Error('Invalid credentials');
