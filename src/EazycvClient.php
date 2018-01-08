@@ -12,7 +12,7 @@ class EazycvClient
     //customer slug
     public $customer;
 
-    //API key, get one at eazycv.nl
+    //API credentials
     public $apiKey;
     public $userKey = null;
     public $apiSecret;
@@ -85,6 +85,8 @@ class EazycvClient
     }
 
     /**
+     * Login a manager user / system  user
+     *
      * @param null $email
      * @param null $passWord
      * @param null $persistant
@@ -113,6 +115,9 @@ class EazycvClient
 
 
     /**
+     * Login a candidate with username and password. Returns a session, use persistent for a long lasting
+     * token (for example mobile).
+     *
      * @param null $email
      * @param null $passWord
      * @param null $persistant
@@ -175,7 +180,7 @@ class EazycvClient
     }
 
     /**
-     * Post request to Eazycv.io
+     * Post request to EazyCV
      *
      * @param $endpoint
      * @return mixed
@@ -243,7 +248,7 @@ class EazycvClient
     }
 
     /**
-     * Put request to Eazycv.io
+     * Delete request
      *
      * @param $endpoint
      * @return mixed
