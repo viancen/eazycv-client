@@ -15,7 +15,6 @@ class EazycvClient
     //API credentials
     public $apiKey;
     public $userKey = null;
-    public $apiSecret;
 
     //What part of Eazycv is used
     public $settings = [];
@@ -35,23 +34,20 @@ class EazycvClient
      * EazycvClient constructor.
      *
      * @param null $apiKey
-     * @param null $apiSecret
      * @param null $customer
      * @param null $root
      * @param array $options
      */
-    public function __construct($apikey = '', $apiSecret = '', $customer = null, $root = null, $options = [])
+    public function __construct($apikey = '', $customer = null, $root = null, $options = [])
     {
-        if (!$apikey) throw new Eazycv_Error('You must provide a Eazycv API key');
-        if (!$apiSecret) throw new Eazycv_Error('You must provide a Eazycv API secret');
-        if (!$customer) throw new Eazycv_Error('You must provide a Eazycv customer slug');
+        if (!$apikey) throw new \Eazycv_Error('You must provide a Eazycv API key');
+        if (!$customer) throw new \Eazycv_Error('You must provide a Eazycv customer slug');
         if (!$root) {
             $root = 'https://api.eazycv.net';
         }
 
         $this->apiKey = $apikey;
         $this->root = $root;
-        $this->apiSecret = $apiSecret;
         $this->customer = $customer;
 
         if (!empty($options)) {
@@ -72,7 +68,7 @@ class EazycvClient
      */
     public function setUserKey($userKey)
     {
-        $this->userKey = md5($userKey . $this->apiSecret);
+        $this->userKey = $userKey;
     }
 
     /**
@@ -136,7 +132,7 @@ class EazycvClient
         ]);
 
         if (!empty($data['session'])) {
-            $this->apiKey = md5($data['session']['token'] . $this->apiSecret);
+            $this->apiKey = $data['session']['token'];
             return $data['session'];
         } else {
             throw new Eazycv_Error('Invalid credentials');
@@ -145,7 +141,7 @@ class EazycvClient
     }
 
     /**
-     * POST request to EazyCV
+     * Post request to EazyCV
      *
      * @param $endpoint
      * @param array $params
@@ -180,7 +176,7 @@ class EazycvClient
     }
 
     /**
-     * GET request to EazyCV
+     * Post request to EazyCV
      *
      * @param $endpoint
      * @return mixed
@@ -214,7 +210,7 @@ class EazycvClient
     }
 
     /**
-     * PUT request to Eazycv
+     * Put request to Eazycv.io
      *
      * @param $endpoint
      * @return mixed
@@ -248,7 +244,7 @@ class EazycvClient
     }
 
     /**
-     * DELETE request
+     * Delete request
      *
      * @param $endpoint
      * @return mixed
