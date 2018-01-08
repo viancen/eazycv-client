@@ -49,7 +49,7 @@ class EazycvClient
             $root = 'https://api.eazycv.net';
         }
 
-        $this->apiKey = md5($apikey . $apiSecret);
+        $this->apiKey = $apikey;
         $this->root = $root;
         $this->apiSecret = $apiSecret;
         $this->customer = $customer;
@@ -66,11 +66,19 @@ class EazycvClient
 
     }
 
+    /**
+     * Sets the token for the session of a logged in user
+     * @param $userKey
+     */
     public function setUserKey($userKey)
     {
         $this->userKey = md5($userKey . $this->apiSecret);
     }
 
+    /**
+     * Gets all settings from eazycv
+     * @param $userKey
+     */
     public function getSettings()
     {
         return $this->settings;
