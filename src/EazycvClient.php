@@ -145,7 +145,7 @@ class EazycvClient
     }
 
     /**
-     * Post request to Eazycv.io
+     * POST request to EazyCV
      *
      * @param $endpoint
      * @param array $params
@@ -180,7 +180,7 @@ class EazycvClient
     }
 
     /**
-     * Post request to EazyCV
+     * GET request to EazyCV
      *
      * @param $endpoint
      * @return mixed
@@ -214,7 +214,7 @@ class EazycvClient
     }
 
     /**
-     * Put request to Eazycv.io
+     * PUT request to Eazycv
      *
      * @param $endpoint
      * @return mixed
@@ -248,7 +248,7 @@ class EazycvClient
     }
 
     /**
-     * Delete request
+     * DELETE request
      *
      * @param $endpoint
      * @return mixed
