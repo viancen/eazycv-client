@@ -43,7 +43,7 @@ class EazycvClient
         if (!$apikey) throw new \Eazycv_Error('You must provide a Eazycv API key');
         if (!$customer) throw new \Eazycv_Error('You must provide a Eazycv customer slug');
         if (!$root) {
-            $root = 'https://api.eazycv.net';
+            $root = 'https://api.eazycv.cloud';
         }
 
         $this->apiKey = $apikey;
