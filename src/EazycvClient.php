@@ -60,9 +60,30 @@ class EazycvClient {
 		}
 
 		$this->client = new Client();
-
+		if ( ! $this->pingEazyCvServer() ) {
+			throw new \Eazycv_Error( 'EazyCV cannot be reached' );
+		}
 		$this->root = rtrim( $this->root, '/' ) . '/';
 
+	}
+
+	// Function to check response time
+	private function pingEazyCvServer() {
+		$starttime = microtime( true );
+		$file      = fsockopen( str_replace( [ 'http://', 'https://' ], '', $this->root ), 443, $errno, $errstr, 10 );
+		$stoptime  = microtime( true );
+		$status    = 0;
+
+		if ( ! $file ) {
+			$status = - 1;
+		}  // Site is down
+		else {
+			fclose( $file );
+			$status = ( $stoptime - $starttime ) * 1000;
+			$status = floor( $status );
+		}
+
+		return $status;
 	}
 
 	/**
@@ -90,8 +111,8 @@ class EazycvClient {
 	 * @param null $passWord
 	 * @param null $persistant
 	 *
-	 * @throws Eazycv_Error
 	 * @return array $sessionTokenToReplaceApiTokenWith
+	 * @throws Eazycv_Error
 	 */
 	public function loginUser( $email = null, $passWord = null, $persistant = false ) {
 		if ( ! $email ) {
@@ -126,8 +147,8 @@ class EazycvClient {
 	 * @param null $passWord
 	 * @param null $persistant
 	 *
-	 * @throws Eazycv_Error
 	 * @return array $sessionTokenToReplaceApiTokenWith
+	 * @throws Eazycv_Error
 	 */
 	public function loginCandidate( $email = null, $passWord = null, $persistant = false ) {
 		if ( ! $email ) {

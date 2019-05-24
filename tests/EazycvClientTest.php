@@ -17,7 +17,7 @@ class theTest extends \PHPUnit_Framework_TestCase
             $key,
             $secret,
             'klantnaam',
-            'https://api.eazycv.local'
+            'https://api.eazycv.cloud'
         );
 
         if (!empty($tt)) {
