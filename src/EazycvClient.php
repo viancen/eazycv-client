@@ -69,6 +69,10 @@ class EazycvClient {
 
 	// Function to check response time
 	private function pingEazyCvServer() {
+		if ( strstr( $this->root, '.local' ) ) {
+			return true;
+		}
+
 		$starttime = microtime( true );
 		$file      = fsockopen( str_replace( [ 'http://', 'https://' ], '', $this->root ), 443, $errno, $errstr, 10 );
 		$stoptime  = microtime( true );
