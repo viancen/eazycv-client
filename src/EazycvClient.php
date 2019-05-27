@@ -60,9 +60,9 @@ class EazycvClient {
 		}
 
 		$this->client = new Client();
-		if ( ! $this->pingEazyCvServer() ) {
-			//throw new \Eazycv_Error( 'EazyCV cannot be reached' );
-		}
+		//if ( ! $this->pingEazyCvServer() ) {
+		//throw new \Eazycv_Error( 'EazyCV cannot be reached' );
+		//	}
 		$this->root = rtrim( $this->root, '/' ) . '/';
 
 	}
