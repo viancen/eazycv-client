@@ -61,8 +61,8 @@ class EazycvClient {
 
 		$this->client = new Client();
 		//if ( ! $this->pingEazyCvServer() ) {
-		//throw new \Eazycv_Error( 'EazyCV cannot be reached' );
-		//	}
+		//	throw new \Eazycv_Error( 'EazyCV cannot be reached' );
+		//}
 		$this->root = rtrim( $this->root, '/' ) . '/';
 
 	}
@@ -73,21 +73,8 @@ class EazycvClient {
 			return true;
 		}
 
-		$starttime = microtime( true );
-		$file      = fsockopen( str_replace( [ 'http://', 'https://' ], '', $this->root ), 443, $errno, $errstr, 10 );
-		$stoptime  = microtime( true );
-		$status    = 0;
+		return $this->client->request( 'GET', $this->root . 'ping.php' );
 
-		if ( ! $file ) {
-			$status = - 1;
-		}  // Site is down
-		else {
-			fclose( $file );
-			$status = ( $stoptime - $starttime ) * 1000;
-			$status = floor( $status );
-		}
-
-		return $status;
 	}
 
 	/**
