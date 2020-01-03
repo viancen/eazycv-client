@@ -191,13 +191,12 @@ class EazycvClient {
 		return $body;
 	}
 
-	/**
-	 * Post request to EazyCV
-	 *
-	 * @param $endpoint
-	 *
-	 * @return mixed
-	 */
+    /**
+     * @param $endpoint
+     * @param array $parameters
+     * @return array|mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
 	public function get( $endpoint, $parameters = [] ) {
 
 		try {
