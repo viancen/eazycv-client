@@ -99,6 +99,7 @@ class EazycvClient {
      * @param bool $persistant
      * @return mixed
      * @throws Eazycv_Error
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
 	public function loginUser( $email = null, $passWord = null, $persistant = false ) {
 		if ( ! $email ) {
@@ -124,18 +125,14 @@ class EazycvClient {
 
 	}
 
-
-	/**
-	 * Login a candidate with username and password. Returns a session, use persistent for a long lasting
-	 * token (for example mobile).
-	 *
-	 * @param null $email
-	 * @param null $passWord
-	 * @param null $persistant
-	 *
-	 * @return array $sessionTokenToReplaceApiTokenWith
-	 * @throws Eazycv_Error
-	 */
+    /**
+     * @param null $email
+     * @param null $passWord
+     * @param bool $persistant
+     * @return mixed
+     * @throws Eazycv_Error
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
 	public function loginCandidate( $email = null, $passWord = null, $persistant = false ) {
 		if ( ! $email ) {
 			throw new Eazycv_Error( 'You must provide a emailaddress' );
@@ -229,13 +226,12 @@ class EazycvClient {
 		return $body;
 	}
 
-	/**
-	 * Put request to Eazycv.io
-	 *
-	 * @param $endpoint
-	 *
-	 * @return mixed
-	 */
+    /**
+     * @param $endpoint
+     * @param $params
+     * @return array|mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
 	public function put( $endpoint, $params ) {
 
 		try {
@@ -264,13 +260,11 @@ class EazycvClient {
 		return $body;
 	}
 
-	/**
-	 * Delete request
-	 *
-	 * @param $endpoint
-	 *
-	 * @return mixed
-	 */
+    /**
+     * @param $endpoint
+     * @return array|mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
 	public function del( $endpoint ) {
 
 		try {
