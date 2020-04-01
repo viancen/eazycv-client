@@ -14,6 +14,7 @@ class EazycvClient {
 	//API credentials
 	public $apiKey;
 
+	//userKey
 	public $userKey = null;
 
 	//What part of Eazycv is used
