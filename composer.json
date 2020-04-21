@@ -1,7 +1,7 @@
 {
   "name": "viancen/eazycv-client",
   "type": "package",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "API client for EazyCV",
   "keywords": [
     "eazycv",
@@ -18,8 +18,8 @@
     }
   ],
   "require": {
-    "php": ">=7.2",
-    "guzzlehttp/guzzle": "6.3.3"
+    "php": ">=7.3",
+    "guzzlehttp/guzzle": "^6.5"
   },
   "require-dev": {
     "phpunit/phpunit": "3.7.14"
