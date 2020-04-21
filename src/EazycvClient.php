@@ -138,11 +138,12 @@ class EazycvClient
 	 * @param null $email
 	 * @param null $passWord
 	 * @param bool $persistant
+	 * @param null $captcha
 	 * @return mixed
 	 * @throws Eazycv_Error
 	 * @throws \GuzzleHttp\Exception\GuzzleException
 	 */
-	public function loginCandidate($email = null, $passWord = null, $persistant = false)
+	public function loginCandidate($email = null, $passWord = null, $persistant = false, $captcha = null)
 	{
 		if (!$email) {
 			throw new Eazycv_Error('You must provide a emailaddress');
@@ -154,6 +155,7 @@ class EazycvClient
 		$data = $this->post('candidates/login', [
 			'email' => $email,
 			'password' => $passWord,
+			'captcha' => $captcha,
 			'persistant' => $persistant
 		]);
 
