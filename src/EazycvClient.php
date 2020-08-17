@@ -4,6 +4,11 @@ use GuzzleHttp\Client;
 
 require_once 'EazycvClient/Exceptions.php';
 
+/**
+ *
+ * Class EazycvClient
+ *
+ */
 class EazycvClient
 {
     //private client (Guzzle)
@@ -27,7 +32,9 @@ class EazycvClient
     //not used yet
     public $debug = false;
 
-    //Todo: map all errors into comprehensible messages
+    /**
+     * @var string[]
+     */
     public static $error_map = [
         "Invalid_Key" => "Eazycv_Invalid_Key",
     ];
@@ -63,23 +70,10 @@ class EazycvClient
         }
 
         $this->client = new Client();
-        //if ( ! $this->pingEazyCvServer() ) {
-        //throw new \Eazycv_Error( 'EazyCV cannot be reached' );
-        //}
         $this->root = rtrim($this->root, '/') . '/';
 
     }
 
-    // Function to check response time
-    private function pingEazyCvServer()
-    {
-        if (strstr($this->root, '.test')) {
-            return true;
-        }
-
-        return $this->client->request('GET', $this->root . '');
-
-    }
 
     /**
      * Sets the token for the session of a logged in user
@@ -206,6 +200,8 @@ class EazycvClient
     }
 
     /**
+     * GET eazy data
+     *
      * @param $endpoint
      * @param array $parameters
      * @return array|mixed
