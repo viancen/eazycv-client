@@ -1,2 +1,7 @@
-/vendor
-.idea
+/vendor/
+/.idea/
+/.vscode/
+/.phpunit.result.cache
+.phpunit.cache
+*.swp
+.DS_Store

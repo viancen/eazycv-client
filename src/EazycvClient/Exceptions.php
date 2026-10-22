@@ -1,14 +1,29 @@
 <?php
 
-class Eazycv_Error extends Exception {}
-class Eazycv_HttpError extends Eazycv_Error {}
+/**
+ * Base exception for all EazyCV client errors.
+ */
+class Eazycv_Error extends Exception
+{
+}
 
 /**
- * The parameters passed to the API call are invalid or not provided when required
+ * HTTP-layer error raised by the EazyCV client.
  */
-class Eazycv_ValidationError extends Eazycv_Error {}
+class Eazycv_HttpError extends Eazycv_Error
+{
+}
 
 /**
- * The provided API key is not a valid Eazycv API key
+ * The parameters passed to the API call are invalid or not provided when required.
  */
-class Eazycv_Invalid_Key extends Eazycv_Error {}
+class Eazycv_ValidationError extends Eazycv_Error
+{
+}
+
+/**
+ * The provided API key is not a valid EazyCV API key.
+ */
+class Eazycv_Invalid_Key extends Eazycv_Error
+{
+}

@@ -1,59 +1,90 @@
 <?php
 
 use GuzzleHttp\Client;
-
-require_once 'EazycvClient/Exceptions.php';
+use GuzzleHttp\ClientInterface;
 
 /**
+ * HTTP API client for EazyCV.
  *
- * Class EazycvClient
- *
+ * This class is the stable public surface used by consuming applications.
+ * Constructor arguments, public methods/properties, request headers, payload
+ * encoding and decoded response shapes must remain backwards compatible.
  */
 class EazycvClient
 {
-    //private client (Guzzle)
+    /**
+     * @var ClientInterface
+     */
     private $client;
 
-    //customer slug
+    /**
+     * Customer / instance slug sent as X-Customer.
+     *
+     * @var string
+     */
     public $customer;
 
-    //API credentials
+    /**
+     * API key sent as X-Authorization.
+     *
+     * @var string
+     */
     public $apiKey;
 
-    //userKey
+    /**
+     * Optional user session token sent as X-User.
+     *
+     * @var string|null
+     */
     public $userKey = null;
 
-    //What part of Eazycv is used
+    /**
+     * Optional client-side settings bag (not sent automatically).
+     *
+     * @var array
+     */
     public $settings = [];
 
-    //Root url of API
+    /**
+     * API root URL, always ending with a trailing slash.
+     *
+     * @var string
+     */
     public $root;
 
-    //not used yet
+    /**
+     * Reserved for future debug output.
+     *
+     * @var bool
+     */
     public $debug = false;
 
     /**
-     * @var string[]
+     * Maps API error names to exception class names.
+     *
+     * @var array<string, string>
      */
     public static $error_map = [
-        "Invalid_Key" => "Eazycv_Invalid_Key",
+        'Invalid_Key' => 'Eazycv_Invalid_Key',
     ];
 
     /**
-     * EazycvClient constructor.
-     * @param string $apikey
-     * @param null $customer
-     * @param null $root
-     * @param array $options
+     * @param string               $apikey   API key (X-Authorization)
+     * @param string|null          $customer Customer slug (X-Customer)
+     * @param string|null          $root     API base URL
+     * @param array                $options  Supported keys:
+     *                                       - settings (array)
+     *                                       - http_client (ClientInterface) for DI / tests
+     *
      * @throws Eazycv_Error
      */
     public function __construct($apikey = '', $customer = null, $root = null, $options = [])
     {
         if (!$apikey) {
-            throw new \Eazycv_Error('You must provide a Eazycv API key');
+            throw new Eazycv_Error('You must provide a Eazycv API key');
         }
         if (!$customer) {
-            throw new \Eazycv_Error('You must provide a Eazycv customer slug');
+            throw new Eazycv_Error('You must provide a Eazycv customer slug');
         }
         if (!$root) {
             $root = 'https://api.eazycv.cloud';
@@ -63,22 +94,25 @@ class EazycvClient
         $this->root = $root;
         $this->customer = $customer;
 
-        if (!empty($options)) {
-            if (!empty($options['settings'])) {
-                $this->settings = $options['settings'];
-            }
+        if (!empty($options['settings'])) {
+            $this->settings = $options['settings'];
         }
 
-        $this->client = new Client();
-        $this->root = rtrim($this->root, '/') . '/';
+        if (!empty($options['http_client']) && $options['http_client'] instanceof ClientInterface) {
+            $this->client = $options['http_client'];
+        } else {
+            $this->client = new Client();
+        }
 
+        $this->root = rtrim($this->root, '/') . '/';
     }
 
-
     /**
-     * Sets the token for the session of a logged in user
+     * Sets the token for the session of a logged in user.
      *
-     * @param $userKey
+     * @param string $userKey
+     *
+     * @return void
      */
     public function setUserKey($userKey)
     {
@@ -86,7 +120,7 @@ class EazycvClient
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function getSettings()
     {
@@ -94,11 +128,15 @@ class EazycvClient
     }
 
     /**
-     * @param null $email
-     * @param null $passWord
-     * @param bool $persistant
-     * @param null $captcha
+     * Authenticate a back-office user and store the session token as user key.
+     *
+     * @param string|null $email
+     * @param string|null $passWord
+     * @param bool       $persistant Keep the intentional API field spelling.
+     * @param mixed|null  $captcha
+     *
      * @return mixed
+     *
      * @throws Eazycv_Error
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
@@ -115,25 +153,28 @@ class EazycvClient
             'email' => $email,
             'password' => $passWord,
             'captcha' => $captcha,
-            'persistant' => $persistant
+            'persistant' => $persistant,
         ]);
 
         if (!empty($data['session'])) {
             $this->setUserKey($data['session']['token']);
 
             return $data['session'];
-        } else {
-            throw new Eazycv_Error('Invalid credentials');
         }
 
+        throw new Eazycv_Error('Invalid credentials');
     }
 
     /**
-     * @param null $email
-     * @param null $passWord
-     * @param bool $persistant
-     * @param null $captcha
+     * Authenticate a candidate and replace the API key with the session token.
+     *
+     * @param string|null $email
+     * @param string|null $passWord
+     * @param bool       $persistant Keep the intentional API field spelling.
+     * @param mixed|null  $captcha
+     *
      * @return mixed
+     *
      * @throws Eazycv_Error
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
@@ -150,159 +191,125 @@ class EazycvClient
             'email' => $email,
             'password' => $passWord,
             'captcha' => $captcha,
-            'persistant' => $persistant
+            'persistant' => $persistant,
         ]);
 
         if (!empty($data['session'])) {
             $this->apiKey = $data['session']['token'];
 
             return $data['session'];
-        } else {
-            throw new Eazycv_Error('Invalid credentials');
         }
 
+        throw new Eazycv_Error('Invalid credentials');
     }
 
     /**
-     * @param $endpoint
-     * @param array $params
+     * @param string $endpoint
+     * @param array  $params
+     *
      * @return array|mixed
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function post($endpoint, $params = [])
     {
-
-        try {
-
-            $response = $this->client->request('POST', $this->root . $endpoint, [
-                'headers' => [
-                    'X-User' => $this->userKey,
-                    'X-Authorization' => $this->apiKey,
-                    'X-Customer' => $this->customer,
-                    'X-response-type' => 'json',
-                    'Content-Type' => 'application/json',
-                ],
-                'decode_content' => true,
-                'verify' => false,
-                'body' => json_encode($params)
-            ]);
-
-        } catch (Eazycv_HttpError $error) {
-            return [
-                'code' => $error->getCode(),
-                'message' => $error->getMessage()
-            ];
-        }
-
-        $body = json_decode($response->getBody(), true);
-
-        return $body;
+        return $this->request('POST', $endpoint, [
+            'body' => json_encode($params),
+        ]);
     }
 
     /**
-     * GET eazy data
+     * GET data from the EazyCV API.
      *
-     * @param $endpoint
-     * @param array $parameters
+     * @param string $endpoint
+     * @param array  $parameters
+     *
      * @return array|mixed
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function get($endpoint, $parameters = [])
     {
-
-        try {
-            $response = $this->client->request('GET', $this->root . $endpoint, [
-                'headers' => [
-                    'X-User' => $this->userKey,
-                    'X-Authorization' => $this->apiKey,
-                    'X-Customer' => $this->customer,
-                    'X-response-type' => 'json',
-                    'Content-Type' => 'application/json',
-                ],
-                'decode_content' => true,
-                'verify' => false,
-                'query' => $parameters
-            ]);
-
-        } catch (Eazycv_HttpError $error) {
-
-            return [
-                'code' => $error->getCode(),
-                'message' => $error->getMessage()
-            ];
-        }
-
-        $body = json_decode($response->getBody(), true);
-
-        return $body;
+        return $this->request('GET', $endpoint, [
+            'query' => $parameters,
+        ]);
     }
 
     /**
-     * @param $endpoint
-     * @param $params
+     * @param string $endpoint
+     * @param mixed  $params
+     *
      * @return array|mixed
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function put($endpoint, $params)
     {
-
-        try {
-            $response = $this->client->request('PUT', $this->root . $endpoint, [
-                'headers' => [
-                    'X-User' => $this->userKey,
-                    'X-Authorization' => $this->apiKey,
-                    'X-Customer' => $this->customer,
-                    'X-response-type' => 'json',
-                    'Content-Type' => 'application/json',
-                ],
-                'decode_content' => true,
-                'verify' => false,
-                'body' => json_encode($params)
-            ]);
-
-        } catch (Eazycv_HttpError $error) {
-            return [
-                'code' => $error->getCode(),
-                'message' => $error->getMessage()
-            ];
-        }
-
-        $body = json_decode($response->getBody(), true);
-
-        return $body;
+        return $this->request('PUT', $endpoint, [
+            'body' => json_encode($params),
+        ]);
     }
 
     /**
-     * @param $endpoint
+     * @param string $endpoint
+     *
      * @return array|mixed
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function del($endpoint)
     {
+        return $this->request('DELETE', $endpoint);
+    }
 
+    /**
+     * Shared request path used by get/post/put/del.
+     *
+     * Headers, SSL verify behaviour and JSON decoding match the historical client.
+     *
+     * @param string $method
+     * @param string $endpoint
+     * @param array  $requestOptions
+     *
+     * @return array|mixed
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function request($method, $endpoint, array $requestOptions = [])
+    {
         try {
-            $response = $this->client->request('DELETE', $this->root . $endpoint, [
-                'headers' => [
-                    'X-User' => $this->userKey,
-                    'X-Authorization' => $this->apiKey,
-                    'X-Customer' => $this->customer,
-                    'X-response-type' => 'json',
-                    'Content-Type' => 'application/json',
-                ],
-                'decode_content' => true,
-                'verify' => false
-            ]);
-
+            $response = $this->client->request(
+                $method,
+                $this->root . $endpoint,
+                array_merge([
+                    'headers' => $this->defaultHeaders(),
+                    'decode_content' => true,
+                    'verify' => false,
+                ], $requestOptions)
+            );
         } catch (Eazycv_HttpError $error) {
             return [
                 'code' => $error->getCode(),
-                'message' => $error->getMessage()
+                'message' => $error->getMessage(),
             ];
         }
 
-        $body = json_decode($response->getBody(), true);
-
-        return $body;
+        return json_decode((string) $response->getBody(), true);
     }
 
+    /**
+     * Default headers sent on every API call.
+     *
+     * @return array<string, mixed>
+     */
+    private function defaultHeaders()
+    {
+        return [
+            'X-User' => $this->userKey,
+            'X-Authorization' => $this->apiKey,
+            'X-Customer' => $this->customer,
+            'X-response-type' => 'json',
+            'Content-Type' => 'application/json',
+        ];
+    }
 }
